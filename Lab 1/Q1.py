@@ -10,7 +10,15 @@ def additive_cipher(text, key, mode='encrypt'):
 
 def multiplicative_cipher(text, key, mode='encrypt'):
     inv = modinv(key, 26)
-    return ''.join(chr(((ord(c) - 97) * (key if mode == 'encrypt' else inv)) % 26 + 97) for c in text if c.isalpha())
+    if mode == 'decrypt' and inv is None:
+        raise ValueError(f"Key {key} has no modular inverse mod 26. Choose a coprime key.")
+    result = ''
+    multiplier = key if mode == 'encrypt' else inv
+    for c in text:
+        if c.isalpha():
+            num = ord(c) - 97
+            result += chr((num * multiplier) % 26 + 97)
+    return result
 
 def affine_cipher(text, a, b, mode='encrypt'):
     a_inv = modinv(a, 26)
