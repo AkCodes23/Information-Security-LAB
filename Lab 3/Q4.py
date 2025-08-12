@@ -9,7 +9,7 @@ from cryptography.hazmat.primitives import serialization, hashes
 from cryptography.hazmat.primitives.kdf.hkdf import HKDF
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
-# --- RSA Section ---
+
 
 def rsa_generate_keys():
     start = time.time()
@@ -41,7 +41,6 @@ def rsa_decrypt_file(private_key, enc_aes_key, iv, ciphertext):
     end = time.time()
     return plaintext, end - start
 
-# --- ECC Section (Hybrid ElGamal + AES-GCM) ---
 
 def ecc_generate_keys():
     start = time.time()
@@ -91,7 +90,7 @@ def ecc_decrypt_file(private_key, ephemeral_pub_bytes, iv, tag, ciphertext):
 
     return plaintext, end - start
 
-# --- Main testing and reporting ---
+
 
 def test_files(files):
     results = {"RSA": {}, "ECC": {}}
@@ -99,7 +98,7 @@ def test_files(files):
     for filename in files:
         print(f"\n--- Testing file: {filename} ---")
 
-        # RSA
+        
         rsa_key, rsa_key_time = rsa_generate_keys()
         enc_aes_key, iv, ciphertext, rsa_enc_time = rsa_encrypt_file(rsa_key.publickey(), filename)
         plaintext, rsa_dec_time = rsa_decrypt_file(rsa_key, enc_aes_key, iv, ciphertext)
@@ -118,7 +117,6 @@ def test_files(files):
         print(f"RSA decryption time: {rsa_dec_time:.3f}s")
         print(f"RSA successful decryption: {rsa_success}")
 
-        # ECC
         ecc_priv_key, ecc_key_time = ecc_generate_keys()
         ephemeral_pub, iv, tag, ciphertext, ecc_enc_time = ecc_encrypt_file(ecc_priv_key.public_key(), filename)
         plaintext, ecc_dec_time = ecc_decrypt_file(ecc_priv_key, ephemeral_pub, iv, tag, ciphertext)
@@ -153,7 +151,7 @@ def print_summary(results, files):
             print(f"  Decryption Success: {res['Success']}")
             print()
 
-# --- Usage ---
+
 
 if __name__ == "__main__":
     # Make sure test files exist or create dummy ones
@@ -167,3 +165,4 @@ if __name__ == "__main__":
 
     results = test_files(files_to_test)
     print_summary(results, files_to_test)
+
