@@ -4,8 +4,8 @@ def mod_exp(base, exp, mod):
     return pow(base, exp, mod)
 
 def elgamal_keygen(p, g):
-    x = random.randint(1, p-2)  # Private key
-    h = mod_exp(g, x, p)        # Public key component
+    x = random.randint(1, p-2)  
+    h = mod_exp(g, x, p)   
     return (p, g, h), x
 
 def elgamal_encrypt(pub_key, message_int):
@@ -23,21 +23,22 @@ def elgamal_decrypt(priv_key, cipher, p):
     message_int = (c2 * s_inv) % p
     return message_int
 
-# Parameters (p must be large prime)
-p = 30803  # Example small prime for demonstration
+
+p = 30803 
 g = 2
 
-# Key generation
+
 public_key, private_key = elgamal_keygen(p, g)
 
 message = "Confidential Data"
 message_int = int.from_bytes(message.encode(), 'big')
 
-# Encrypt
+
 ciphertext = elgamal_encrypt(public_key, message_int)
 print("Ciphertext:", ciphertext)
 
-# Decrypt
+
 decrypted_int = elgamal_decrypt(private_key, ciphertext, p)
 decrypted_msg = decrypted_int.to_bytes((decrypted_int.bit_length() + 7) // 8, 'big').decode()
 print("Decrypted message:", decrypted_msg)
+
