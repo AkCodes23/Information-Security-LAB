@@ -9,9 +9,6 @@ from cryptography.hazmat.primitives import serialization, hashes
 from cryptography.hazmat.primitives.kdf.hkdf import HKDF
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
-
-# --- RSA functions ---
-
 def rsa_generate_keys():
     start = time.time()
     key = RSA.generate(2048)
@@ -19,7 +16,6 @@ def rsa_generate_keys():
     return key, end - start
 
 def rsa_encrypt(public_key, plaintext):
-    # Hybrid RSA + AES encrypt for performance (RSA encrypts AES key)
     aes_key = get_random_bytes(32)
     cipher_rsa = PKCS1_OAEP.new(public_key)
     enc_aes_key = cipher_rsa.encrypt(aes_key)
@@ -41,9 +37,6 @@ def rsa_decrypt(private_key, enc_aes_key, iv, ciphertext):
     end = time.time()
     return plaintext, end - start
 
-
-# --- ECC ElGamal-like encryption (hybrid) ---
-
 def ecc_generate_keys():
     start = time.time()
     private_key = ec.generate_private_key(ec.SECP256R1())
@@ -51,11 +44,11 @@ def ecc_generate_keys():
     return private_key, end - start
 
 def ecc_encrypt(public_key, plaintext):
-    # Ephemeral key generation
+
     ephemeral_private = ec.generate_private_key(ec.SECP256R1())
     shared_secret = ephemeral_private.exchange(ec.ECDH(), public_key)
 
-    # Derive AES key from shared secret
+
     derived_key = HKDF(
         algorithm=hashes.SHA256(),
         length=32,
@@ -94,8 +87,6 @@ def ecc_decrypt(private_key, ephemeral_public_bytes, iv, tag, ciphertext):
     return plaintext, end - start
 
 
-# --- Testing framework ---
-
 def generate_message(size_kb):
     return os.urandom(size_kb * 1024)
 
@@ -104,8 +95,6 @@ def run_test(size_kb):
 
     message = generate_message(size_kb)
 
-    # RSA
-    rsa_key, rsa_key_time = rsa_generate_keys()
     print(f"RSA key gen time: {rsa_key_time:.4f} s")
 
     enc_aes_key, iv, ciphertext, rsa_enc_time = rsa_encrypt(rsa_key.publickey(), message)
@@ -116,7 +105,7 @@ def run_test(size_kb):
 
     assert decrypted == message, "RSA decryption failed!"
 
-    # ECC ElGamal-like
+
     ecc_priv, ecc_key_time = ecc_generate_keys()
     print(f"ECC key gen time: {ecc_key_time:.4f} s")
 
@@ -131,3 +120,4 @@ def run_test(size_kb):
 if __name__ == "__main__":
     for size in [1, 10]:
         run_test(size)
+
