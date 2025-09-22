@@ -243,12 +243,19 @@ class CryptographyToolkit:
         }
     
     def rsa_encrypt_decrypt(self, message, key, decrypt=False):
-        """RSA Encryption/Decryption"""
-        if isinstance(message, str):
-            message = int.from_bytes(message.encode(), 'big')
-        
-        exp, n = key
-        return pow(message, exp, n)
+    if not decrypt:
+        # String to number conversion
+        num = 0
+        for char in message:
+            num = num * 256 + ord(char)
+    else:
+        # Number to string conversion
+        chars = []
+        while decrypted_num > 0:
+            chars.append(chr(decrypted_num % 256))
+            decrypted_num //= 256
+        return ''.join(reversed(chars))
+
     
     def elgamal_keygen(self):
         """ElGamal Key Generation (simplified)"""
