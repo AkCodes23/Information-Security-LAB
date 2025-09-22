@@ -1,13 +1,3 @@
-
-"""
-=================================================================================
-COMPREHENSIVE INFORMATION SECURITY LAB EXAMINATION TOOLKIT
-Complete Implementation of Labs 1-6 with Interactive Menus and Exam Scenarios
-Author: Akhil Varanasi
-Date: September 22, 2025
-=================================================================================
-"""
-
 import hashlib
 import time
 import random
