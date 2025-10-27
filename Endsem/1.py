@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+
 """
 ═══════════════════════════════════════════════════════════════════════════
     ICT3141 ULTIMATE EXAM SCRIPT - ALL SCENARIOS
