@@ -525,12 +525,6 @@ class PerformanceTracker:
             print(f"    Average: {avg:.6f}s")
             print(f"    Min:     {min(times):.6f}s")
             print(f"    Max:     {max(times):.6f}s")
-            
-            # ASCII bar
-            scale = 2000
-            bar_len = int(avg * scale)
-            bar = '█' * bar_len if bar_len > 0 else '·'
-            print(f"    Graph:   {bar}")
         
         print("\n" + "="*80)
     
